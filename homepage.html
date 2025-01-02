@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: 'Arial, sans-serif';
+            text-align: center;
+            background-color: #fce4ec;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #f48fb1;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 2px 2px #f8bbd0;
+        }
+        header p {
+            font-size: 1.2rem;
+            margin: 10px 0 0;
+        }
+        .button-container {
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button-container a {
+            display: block;
+            text-decoration: none;
+            background-color: #f48fb1;
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            border-radius: 8px;
+            margin: 15px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+        .button-container a:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
+        }
+        .button-container a.disabled {
+            background-color: #ccc;
+            color: #666;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        .floating-tab {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #ffccdd;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            cursor: pointer;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #f48fb1;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1100;
+        }
+        .popup-content {
+            font-size: 1.2rem;
+            color: #333;
+        }
+        .popup-close {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            background-color: #f48fb1;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-tab" onclick="openPopup()">From Nej to Urska</div>
+
+    <div class="popup" id="popup">
+        <button class="popup-close" onclick="closePopup()">&times;</button>
+        <div class="popup-content">
+            29.9.2018 -> ∞
+        </div>
+    </div>
+
+    <header>
+        <h1>VSE NAJBOLJŠE URŠKA!</h1>
+        <p>To je home page najbolšega para!</p>
+    </header>
+
+    <div class="button-container">
+        <a href="kviz.html">Rojstnodnevni kviz</a>
+        <a class="disabled">Najina zgodba (Release date: Valentinovo)</a>
+        <a class="disabled">Gallery (Release date:?)</a>
+    </div>
+
+    <script>
+        function openPopup() {
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

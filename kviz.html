@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Page</title>
+    <style>
+        body {
+            font-family: 'Arial, sans-serif';
+            text-align: center;
+            background-color: #fce4ec;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #f48fb1;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 2px 2px #f8bbd0;
+        }
+        header p {
+            font-size: 1.2rem;
+            margin: 10px 0 0;
+        }
+        .quiz {
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .quiz h2 {
+            color: #f48fb1;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px #f8bbd0;
+        }
+        .quiz-question {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .quiz-question p {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #444;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .quiz-options button {
+            background-color: #f8bbd0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .quiz-options button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
+        }
+        .quiz-options button:disabled {
+            cursor: not-allowed;
+        }
+        #score {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f48fb1;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Popup Styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .popup p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+        .popup .popup-btn {
+            background-color: #f48fb1;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .popup.correct {
+            border-left: 5px solid green;
+        }
+        .popup.incorrect {
+            border-left: 5px solid red;
+        }
+        /* Rewards Section */
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            top: 140px;
+            right: 20px;
+            z-index: 100;
+            border: 3px solid #f48fb1;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #fff;
+            transition: transform 0.3s ease;
+        }
+        .image-container h3 {
+            font-size: 1.5rem;
+            color: #f48fb1;
+            margin-bottom: 15px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        .image-container:hover {
+            transform: scale(1.1);
+        }
+        .image-placeholder-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+        }
+        .image-placeholder {
+            width: 170px;
+            height: 170px;
+            background-color: #ddd;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            position: relative;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            overflow: hidden;
+            visibility: hidden; /* Initially hide the image */
+            cursor: pointer;
+        }
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.3s ease;
+        }
+        .score-number {
+            font-size: 1.5rem;
+            color: #f48fb1;
+            font-weight: bold;
+            text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
+        }
+        .left-images {
+            position: fixed;
+            top: 140px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 3px solid #f48fb1;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .left-images img {
+            width: 135px;
+            height: 135px;
+            object-fit: cover;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .left-images img:hover {
+            transform: scale(1.1);
+        }
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #f48fb1;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        /* Custom Text Popup Styles */
+        .custom-popup {
+   	 display: none;
+  	  position: fixed;
+   	 top: 50%;
+   	 left: 50%;
+  	  transform: translate(-50%, -50%);
+   	 background-color: #fff;
+   	 padding: 20px;
+  	  border-radius: 10px;
+    	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+ 	   z-index: 1000;
+ 	   width: 80%;
+  	  max-width: 400px;
+   	 border: 2px solid #f48fb1; /* Add small border with color */
+	}
+
+.custom-popup p {
+    font-size: 1.2rem;
+    color: #333;
+    margin: 0; /* Remove margin to prevent extra spacing */
+}
+
+.custom-popup .popup-btn {
+    background-color: #f48fb1;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VSE NAJBOLJŠE URŠKA!</h1>
+        <p>Tukaj je kviz zate. Upam da znas vse (Lahko osvojis tudi nagrade :O)</p>
+    </header>
+
+    <div id="score">Točke: 0</div>
+
+    <div class="left-images">
+        <img src="https://i.imgur.com/TipIVzn.jpg" alt="Left Image 1">
+        <img src="https://i.imgur.com/YanKbOs.jpg" alt="Left Image 2">
+        <img src="https://i.imgur.com/Zbejmt6.jpeg" alt="Left Image 3">
+        <img src="https://i.imgur.com/adtrQoK.jpeg" alt="Left Image 4">
+        <img src="https://i.imgur.com/eM1y63f.jpg" alt="Left Image 5">
+    </div>
+
+       <section class="quiz">
+        <h2>KVIZ</h2>
+        <!-- 15 Questions -->
+        <div class="quiz-question">
+            <p>1: Kdaj sva kupila LEGO Hogwarts Castle?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">2019</button>
+                <button data-answer="incorrect">2020</button>
+                <button data-answer="correct">2021</button>
+                <button data-answer="incorrect">2022</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>2: Približno ob kateri uri sva officiali sla skupaj?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">11:00</button>
+                <button data-answer="incorrect">14:00</button>
+                <button data-answer="incorrect">18:00</button>
+                <button data-answer="correct">21:00</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>3: Kateri je prvi lan na katerega sva sla skupaj?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Starfall 2</button>
+                <button data-answer="correct">EPICENTER 17</button>
+                <button data-answer="incorrect">EPICENTER 16</button>
+                <button data-answer="incorrect">IEM Cologne 2023</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>4: Katera je prva igrica ki sva jo skupaj igrala na Nintendo SWITCHu?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Mario Party</button>
+                <button data-answer="incorrect">Mario Odyssey</button>
+                <button data-answer="incorrect">Overcooked 2</button>
+                <button data-answer="correct">Super Smash Bros</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>5: Katerega od naštetih filmov NISVA gledala?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Se7en</button>
+                <button data-answer="incorrect">Evil Dead Rise</button>
+                <button data-answer="incorrect">Parasite</button>
+                <button data-answer="correct">Challengers</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>6: Kaj je najin spot v Sv. Filip i Jakov </p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Plaža</button>
+                <button data-answer="correct">Pomol</button>
+                <button data-answer="incorrect">Torkul</button>
+                <button data-answer="incorrect">Kamp</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>7: Kaj od naštetega neznaš</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Seštevati</button>
+                <button data-answer="incorrect">Voziti avto ne v robnik</button>
+                <button data-answer="incorrect">Se nehati učiti</button>
+                <button data-answer="correct">Vse našteto</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>8: Koliko stane mochi?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">2.70$</button>
+                <button data-answer="incorrect">10.00$</button>
+                <button data-answer="correct">27.00$!!!</button>
+                <button data-answer="incorrect">7.20$</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>9: Katere ekipe nisva videla na IEM Colognu?</p>
+            <div class="quiz-options">
+                <button data-answer="correct">GamerLegion</button>
+                <button data-answer="incorrect">ENCE</button>
+                <button data-answer="incorrect">Astralis</button>
+                <button data-answer="incorrect">Vitality</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>10: V katerem avtu sem naredil izpit?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Citroen C5</button>
+                <button data-answer="incorrect">Volkswagen Golf</button>
+                <button data-answer="correct">Renault Clio</button>
+                <button data-answer="incorrect">Volkswagen Polo</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>11: Leta 2020 si mi narisala slikco CS mape train, v kateri je player držal 2 knifa. Katera dva?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Shadow daggers in Karambit</button>
+                <button data-answer="correct">Shadow daggers in M9 bayonet</button>
+                <button data-answer="incorrect">Shadow daggers in bayonet</button>
+                <button data-answer="incorrect">Flip knife in ursus knife</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>12: Kaj je najina najljubša serija prevejena v slovenščino?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Zlom</button>
+                <button data-answer="incorrect">Divjad lignjev</button>
+                <button data-answer="correct">Vrhovni senčilci</button>
+                <button data-answer="incorrect">Tuje stvari</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>13: Približno koliko slik sem naredil na telefonu v letu 2024?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">100</button>
+                <button data-answer="incorrect">200</button>
+                <button data-answer="incorrect">300</button>
+                <button data-answer="correct">400</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>14: Tell me what you want me to do (Woah, yeah), Tell me what you want me to do (Slatt) (Playboi Carti:Control) (Kako se nadaljuje?)</p>
+            <div class="quiz-options">
+                <button data-answer="correct">I can wear a business suit and speak proper</button>
+                <button data-answer="incorrect">Girl, I been losing control</button>
+                <button data-answer="incorrect">I only want the best for you</button>
+                <button data-answer="incorrect">Basically, what I'm saying is, I can't change, but</button>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <p>15: Koliko te imam rad?</p>
+            <div class="quiz-options">
+                <button data-answer="incorrect">Nimam te</button>
+                <button data-answer="incorrect">Malo</button>
+                <button data-answer="incorrect">Tok tok</button>
+                <button data-answer="correct">NAJVEČ!</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rewards Section -->
+    <div class="image-container">
+        <h3>Nagrade</h3>
+        <div class="image-placeholder-wrapper">
+            <div class="image-placeholder" data-score="5" onclick="openLightbox('https://i.imgur.com/p7o8AO0.jpg')">
+                <img src="https://i.imgur.com/p7o8AO0.jpg" alt="Reward 1">
+            </div>
+            <div class="score-number">5 tock</div>
+        </div>
+        <div class="image-placeholder-wrapper">
+            <div class="image-placeholder" data-score="10" onclick="openLightbox('https://i.imgur.com/lGbODcP.jpeg')">
+                <img src="https://i.imgur.com/lGbODcP.jpeg" alt="Reward 2">
+            </div>
+            <div class="score-number">10 tock</div>
+        </div>
+        <div class="image-placeholder-wrapper">
+            <div class="image-placeholder" data-score="15" onclick="openLightbox('https://i.imgur.com/EGVZQDW.jpeg')">
+                <img src="https://i.imgur.com/EGVZQDW.jpeg" alt="Reward 3">
+            </div>
+            <div class="score-number">15 tock</div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <img id="lightbox-img" src="" alt="Reward Image">
+        <button class="close-btn" onclick="closeLightbox()">Close</button>
+    </div>
+
+    <!-- Custom Text Popup -->
+    <div id="custom-popup" class="custom-popup">
+        <p>Bravo dobila si vse točke, hvala ti za vse najraj te mam ostani taka kot si! <3333</p>
+        <button class="popup-btn" onclick="closeCustomPopup()">Close</button>
+    </div>
+
+    <div class="popup">
+        <p id="popup-message">Correct answer!</p>
+        <button class="popup-btn" onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        let correctAnswersCount = 0;
+        const scoreElement = document.getElementById('score');
+        const popup = document.querySelector('.popup');
+        const popupMessage = document.getElementById('popup-message');
+        const imagePlaceholders = document.querySelectorAll('.image-placeholder');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const customPopup = document.getElementById('custom-popup');
+        const customScoreThreshold = 15;
+
+        // Update image visibility and blur effect based on score
+        function updateImageBlur() {
+            imagePlaceholders.forEach(image => {
+                const requiredScore = parseInt(image.getAttribute('data-score'));
+                if (correctAnswersCount >= requiredScore) {
+                    image.style.filter = 'none'; // Unblur the image
+                    image.style.visibility = 'visible'; // Make the image visible
+                } else {
+                    image.style.filter = 'blur(5px)'; // Apply blur
+                    image.style.visibility = 'hidden'; // Hide the image
+                }
+            });
+        }
+
+        // Open lightbox with image
+        function openLightbox(imageSrc) {
+            lightbox.classList.add('active');
+            lightboxImg.src = imageSrc;
+        }
+
+        // Close lightbox
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+        }
+
+        // Open custom popup when score reaches 15
+        function openCustomPopup() {
+            customPopup.style.display = 'block';
+        }
+
+        // Close custom popup
+        function closeCustomPopup() {
+            customPopup.style.display = 'none';
+        }
+
+        // Event listeners for quiz answers
+        const buttons = document.querySelectorAll('.quiz-options button');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.getAttribute('data-answer') === 'correct') {
+                    correctAnswersCount++;
+                    popupMessage.textContent = 'Bravo';
+                    popup.className = 'popup correct';
+                    this.style.backgroundColor = '#81c784'; // Greener for correct answers
+                } else {
+                    popupMessage.textContent = 'Nimaš me rada :(';
+                    popup.className = 'popup incorrect';
+                    this.style.backgroundColor = '#e57373'; // Redder for wrong answers
+                }
+
+                // Disable only the clicked button
+                this.disabled = true;
+
+                // Update score and image visibility
+                scoreElement.textContent = `Tocke: ${correctAnswersCount}`;
+                updateImageBlur();
+                popup.style.display = 'block';
+
+                // Check if score reached 15 and open custom popup
+                if (correctAnswersCount >= customScoreThreshold) {
+                    openCustomPopup();
+                }
+            });
+        });
+
+        // Close the popup
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
